@@ -1,0 +1,27 @@
+.badge{
+
+    padding:6px 14px;
+
+    border-radius:20px;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+}
+
+.badge.disponible{
+
+    background:#dff5ea;
+
+    color:#2e7d5b;
+
+}
+
+.badge.occupee{
+
+    background:#ececec;
+
+    color:#555;
+
+}

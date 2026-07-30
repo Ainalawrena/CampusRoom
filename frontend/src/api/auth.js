@@ -43,3 +43,7 @@ export function logout() {
 export function fetchMe() {
   return api.get('/me')
 }
+
+export function getMe(){
+    return api.get("/me");
+}

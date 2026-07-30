@@ -1,0 +1,32 @@
+/* =====================================================
+   Layout principal
+===================================================== */
+
+.dashboard-layout{
+    display:flex;
+    height:100vh;
+    overflow:hidden;
+}
+
+
+/* =====================================================
+   Partie droite (Header + Contenu)
+===================================================== */
+
+.dashboard-main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+/* =====================================================
+   Contenu des pages
+===================================================== */
+
+.dashboard-content{
+    flex:1;
+    overflow-y:auto;
+    padding:30px;
+    background:#f5f7f6;
+}

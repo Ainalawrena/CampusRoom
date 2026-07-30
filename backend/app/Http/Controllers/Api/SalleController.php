@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Salle;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\Reservation;
 
 class SalleController extends Controller
 {
@@ -15,22 +17,33 @@ class SalleController extends Controller
      */
     public function index(Request $request)
     {
-        // with('equipements') : charge les equipements de chaque salle
-        // EN MEME TEMPS que les salles (une seule requete groupee),
-        // au lieu de faire une requete separee par salle (probleme classique
-        // dit "N+1" — 1 requete pour les salles + N requetes, une par salle,
-        // pour leurs equipements)
         $query = Salle::with('equipements');
 
-        if ($recherche = $request->query('recherche')) {
-            $query->where('nom', 'like', "%{$recherche}%");
+        if ($request->filled('recherche')) {
+            $query->where(
+                'nom',
+                'like',
+                '%' . $request->recherche . '%'
+            );
         }
 
-        if ($capacite = $request->query('capacite')) {
-            $query->where('capacite', '>=', (int) $capacite);
+        if ($request->filled('capacite')) {
+            $query->where(
+                'capacite',
+                '>=',
+                $request->capacite
+            );
         }
 
-        return response()->json($query->get());
+        if ($request->filled('equipement')) {
+            $query->whereHas('equipements', function ($q) use ($request) {
+                $q->where('equipements.id', $request->equipement);
+            });
+        }
+
+        return response()->json(
+            $query->orderBy('nom')->get()
+        );
     }
 
     /**
@@ -121,4 +134,33 @@ class SalleController extends Controller
         // 204 = "No Content" : suppression reussie, rien a renvoyer
         return response()->json(null, 204);
     }
+
+    public function disponibilites(Request $request, $id)
+{
+    $date = $request->query('date')
+        ? Carbon::parse($request->query('date'))
+        : Carbon::today();
+
+    $debutSemaine = $date->copy()->startOfWeek(Carbon::MONDAY);
+    $finSemaine = $date->copy()->endOfWeek(Carbon::SUNDAY);
+
+    $reservations = Reservation::where('salle_id', $id)
+        ->whereIn('statut', ['acceptee', 'en_attente'])
+        ->whereBetween('date', [
+            $debutSemaine->toDateString(),
+            $finSemaine->toDateString()
+        ])
+        ->get([
+            'date',
+            'heure_debut',
+            'heure_fin',
+            'statut'
+        ]);
+
+    return response()->json([
+        'debut_semaine' => $debutSemaine->toDateString(),
+        'fin_semaine' => $finSemaine->toDateString(),
+        'reservations' => $reservations
+    ]);
+}
 }

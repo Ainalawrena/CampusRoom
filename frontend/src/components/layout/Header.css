@@ -1,0 +1,120 @@
+.header{
+    height:80px;
+    background:#ffffff;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 35px;
+    flex-shrink:0;
+    border-bottom:1px solid #e6ebe7;
+
+}
+
+
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+/* Notification */
+
+.notification-btn{
+
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#ffffff;
+
+    color:#354F52;
+
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    transition:.2s;
+}
+
+.notification-btn:hover{
+
+    background:#CAD2C5;
+}
+
+/* Utilisateur */
+
+.user-info{
+
+    text-align:right;
+}
+
+.user-info h4{
+
+    margin:0;
+
+    font-size:17px;
+
+    color:#2F3E46;
+
+    font-weight:600;
+}
+
+.user-info span{
+
+    color:#52796F;
+
+    font-size:14px;
+}
+
+/* Avatar */
+
+.user-avatar{
+
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    background:#CAD2C5;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:#2F3E46;
+
+    font-weight:bold;
+
+    font-size:18px;
+}
+
+/* Déconnexion */
+
+.logout-btn{
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    color:#52796F;
+
+    font-weight:600;
+
+    font-size:15px;
+}
+
+.logout-btn:hover{
+
+    color:#354F52;
+}

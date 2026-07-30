@@ -1,0 +1,43 @@
+.reservation-form{
+    margin-top:35px;
+    padding:30px;
+    background:white;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.reservation-form h2{
+    margin:0 0 25px;
+    color:#1F3B57;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:20px;
+}
+
+.form-group label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:#324B5E;
+}
+
+.form-group input,
+.form-group textarea{
+    padding:12px;
+    border:1px solid #D5DCE2;
+    border-radius:10px;
+    font-size:15px;
+}
+
+.form-group textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.time-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}

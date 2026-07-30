@@ -1,0 +1,191 @@
+.disponibilite-page{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.room-card{
+    background:#fff;
+    border-radius:16px;
+    padding:28px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+.room-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:30px;
+}
+
+.room-top h1{
+    margin:0;
+    color:#2F3E46;
+    font-size:34px;
+}
+
+.room-top p{
+    margin-top:6px;
+    color:#6B7280;
+    font-size:15px;
+}
+
+.badge{
+    padding:8px 18px;
+    border-radius:999px;
+    font-weight:600;
+    text-transform:capitalize;
+}
+
+.badge.disponible{
+    background:#CAD2C5;
+    color:#52796F;
+}
+
+.badge.occupee{
+    background:#52796F;
+    color:white;
+}
+
+.badge.maintenance{
+    background:#E9ECEB;
+    color:#2F3E46;
+}
+
+.room-grid{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:45px;
+}
+
+.room-grid span{
+    display:block;
+    color:#6B7280;
+    margin-bottom:8px;
+}
+
+.room-grid strong{
+    color:#2F3E46;
+    font-size:20px;
+}
+
+.equipements{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.equipement{
+    padding:8px 15px;
+    border-radius:999px;
+    background:#EEF3F1;
+    color:#52796F;
+    font-size:13px;
+    font-weight:600;
+}
+
+.planning-card{
+    background:white;
+    border-radius:16px;
+    padding:25px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+.planning-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.planning-header h2{
+    margin:0;
+    color:#2F3E46;
+}
+
+.planning-header p{
+    margin-top:6px;
+    color:#6B7280;
+}
+
+.legend{
+    display:flex;
+    gap:25px;
+}
+
+.legend div{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#2F3E46;
+    font-size:14px;
+}
+
+.square{
+    width:16px;
+    height:16px;
+    border-radius:4px;
+}
+
+.square.libre{
+    background:#CAD2C5;
+}
+
+.square.occupee{
+    background:#52796F;
+}
+
+.planning-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+.planning-table th{
+    background:#F5F7F6;
+    color:#52796F;
+    padding:14px;
+    border:1px solid #E6ECE8;
+}
+
+.planning-table td{
+    border:1px solid #E6ECE8;
+    padding:0;
+    height:48px;
+}
+
+.planning-table .jour{
+    padding-left:16px;
+    background:#FAFBFA;
+    color:#2F3E46;
+    font-weight:600;
+    width:130px;
+}
+
+.cell{
+    width:100%;
+    height:48px;
+    transition:.18s;
+    cursor:pointer;
+}
+
+.cell.libre{
+    background:#CAD2C5;
+}
+
+.cell.occupee{
+    background:#52796F;
+}
+
+.cell:hover{
+    filter:brightness(.95);
+}
+
+#reservation{
+    background:white;
+    border-radius:16px;
+    padding:28px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}

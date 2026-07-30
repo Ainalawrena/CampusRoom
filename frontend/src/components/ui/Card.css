@@ -1,0 +1,49 @@
+.card{
+
+    background:white;
+
+    border-radius:14px;
+
+    padding:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.card-icon{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:24px;
+}
+
+.card-content p{
+
+    margin:0;
+
+    color:#777;
+}
+
+.card-content h2{
+
+    margin-top:6px;
+
+    color:#2F3E46;
+}

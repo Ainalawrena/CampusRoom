@@ -58,36 +58,50 @@ class ReservationController extends Controller
      * Cree une nouvelle demande de reservation (formulaire "Envoyer la
      * demande" du wireframe, accessible a l'etudiant et l'enseignant).
      */
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'salle_id' => ['required', 'exists:salles,id'],
-            'date' => ['required', 'date'],
-            'heure_debut' => ['required', 'date_format:H:i'],
-            // after: verifie que l'heure de fin est bien APRES l'heure
-            // de debut, en comparant directement avec le champ heure_debut
-            'heure_fin' => ['required', 'date_format:H:i', 'after:heure_debut'],
-            'motif' => ['nullable', 'string', 'max:255'],
-        ]);
+   public function store(Request $request)
+{
+    $data = $request->validate([
+        'salle_id' => ['required', 'exists:salles,id'],
+        'date' => ['required', 'date'],
+        'heure_debut' => ['required', 'date_format:H:i'],
+        'heure_fin' => ['required', 'date_format:H:i', 'after:heure_debut'],
+        'motif' => ['nullable', 'string', 'max:255'],
+    ]);
 
-        $reservation = Reservation::create([
-            ...$data,
-            // On force user_id nous-memes (jamais envoye par le client) :
-            // impossible pour quelqu'un de creer une reservation au nom
-            // d'un autre utilisateur en trafiquant la requete
-            'user_id' => $request->user()->id,
+    $chevauchement = Reservation::where('salle_id', $data['salle_id'])
+        ->whereDate('date', $data['date'])
+        ->whereIn('statut', ['en_attente', 'acceptee'])
+        ->where(function ($query) use ($data) {
+            $query
+                ->where('heure_debut', '<', $data['heure_fin'])
+                ->where('heure_fin', '>', $data['heure_debut']);
+        })
+        ->exists();
 
-            // Difference vue dans le wireframe : la demande d'un etudiant
-            // necessite une validation ("Validation requise"), alors que
-            // celle d'un enseignant est confirmee directement
-            'statut' => $request->user()->hasRole('enseignant')
-                ? 'acceptee'
-                : 'en_attente',
-        ]);
-
-        return response()->json($reservation->load(['user', 'salle']), 201);
+    if ($chevauchement) {
+        return response()->json([
+            'message' => 'Cette salle est déjà réservée sur ce créneau.'
+        ], 409);
     }
 
+    $reservation = Reservation::create([
+        ...$data,
+
+        // On force user_id nous-mêmes
+        'user_id' => $request->user()->id,
+
+        // Enseignant : réservation acceptée directement
+        // Étudiant : en attente de validation
+        'statut' => $request->user()->hasRole('enseignant')
+            ? 'acceptee'
+            : 'en_attente',
+    ]);
+
+    return response()->json(
+        $reservation->load(['user', 'salle']),
+        201
+    );
+}
     /**
      * PATCH /api/reservations/{reservation}/statut
      * Accepte ou refuse une demande (boutons "Accepter"/"Refuser" du
@@ -106,5 +120,12 @@ class ReservationController extends Controller
         $reservation->update($data);
 
         return response()->json($reservation->load(['user', 'salle']));
+    }
+    public function mesReservations(Request $request)
+    {
+        return Reservation::with('salle')
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
     }
 }

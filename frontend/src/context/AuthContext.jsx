@@ -76,11 +76,23 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+
+  // Nouvelle fonction, meme principe que login() : l'API /register
+  // renvoie deja { user, token } (teste avec curl plus tot), donc on
+  // peut connecter directement la personne apres son inscription,
+  // sans lui redemander de se reconnecter juste apres
+  async function register(payload) {
+    const res = await authApi.register(payload)
+    localStorage.setItem('campusroom_token', res.data.token)
+    setUser(res.data.user)
+    return res.data.user
+  }
+
   // Provider : rend "value" disponible a tous les composants enfants.
   // {children} = tout ce qu'on mettra a l'interieur de <AuthProvider>...</AuthProvider>
   // dans main.jsx (c'est-a-dire TOUTE l'application)
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   )
