@@ -17,14 +17,14 @@ export const navLinks = {
             icon: FaHome,
         },
         {
-            label: "Mes réservations",
-            path: "/etudiant/reservations",
+            label: "Liste des salles",
+            path: "/etudiant/listeSalle",
             icon: FaCalendarAlt,
         },
         {
-            label: "Nouvelle réservation",
-            path: "/etudiant/nouvelle",
-            icon: FaPlusCircle,
+            label: "Mes réservations",
+            path: "/etudiant/mes-reservations",
+            icon: FaCalendarAlt,
         },
         {
             label: "Profil",
