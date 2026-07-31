@@ -46,6 +46,9 @@ class Salle extends Model
      */
     public function equipements()
     {
-        return $this->belongsToMany(Equipement::class);
+        return $this->belongsToMany(
+            Equipement::class,
+            'equipement_salle'
+        );
     }
 }

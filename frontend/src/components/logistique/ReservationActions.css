@@ -1,0 +1,48 @@
+.reservation-actions{
+    display:flex;
+    gap:8px;
+}
+
+.reservation-actions button{
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.accept{
+    background:#84A98C;
+    color:#fff;
+}
+
+.accept:hover{
+    background:#52796F;
+}
+
+.reject{
+    background:#E76F51;
+    color:#fff;
+}
+
+.reject:hover{
+    background:#C94F34;
+}
+
+.status{
+    font-weight:600;
+}
+
+.status.auto{
+    color:#52796F;
+}
+
+.status.ok{
+    color:#84A98C;
+}
+
+.status.no{
+    color:#E76F51;
+}

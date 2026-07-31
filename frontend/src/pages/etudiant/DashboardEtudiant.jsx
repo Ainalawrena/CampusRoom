@@ -24,7 +24,7 @@ export default function DashboardEtudiant(){
 
             try{
 
-                const response=await dashboardApi.index();
+                const response=await dashboardApi.etudiant();
                 setDashboard(response.data);
 
             }catch(error){

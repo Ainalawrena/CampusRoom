@@ -42,12 +42,32 @@ class ReservationController extends Controller
         // Recherche optionnelle par nom d'utilisateur (ecran Gestion des
         // demandes cote logistique). whereHas() filtre les reservations
         // en regardant a l'interieur de la relation "user" liee
-        if ($recherche = $request->query('recherche')) {
-            $query->whereHas('user', function ($q) use ($recherche) {
-                $q->where('nom', 'like', "%{$recherche}%")
-                  ->orWhere('prenom', 'like', "%{$recherche}%");
-            });
-        }
+        if($recherche=$request->query("recherche")){
+
+    $query->where(function($q) use($recherche){
+
+        $q->where("motif","like","%{$recherche}%")
+          ->orWhere("date","like","%{$recherche}%")
+          ->orWhere("heure_debut","like","%{$recherche}%")
+          ->orWhere("heure_fin","like","%{$recherche}%")
+          ->orWhere("statut","like","%{$recherche}%")
+
+          ->orWhereHas("user",function($user) use($recherche){
+
+              $user->where("nom","like","%{$recherche}%")
+                   ->orWhere("prenom","like","%{$recherche}%");
+
+          })
+
+          ->orWhereHas("salle",function($salle) use($recherche){
+
+              $salle->where("nom","like","%{$recherche}%");
+
+          });
+
+    });
+
+}
 
         // latest() : trie par date de creation, la plus recente en premier
         return response()->json($query->latest()->get());

@@ -187,18 +187,18 @@ export default function ListeSalles() {
                             renderActions={(room) => ( 
                                 <div className="table-actions">
                                     <Button
-                                        variant="secondary"
-                                        onClick={() =>
-                                            navigate(`/enseignant/salles/${room.id}`)
-                                        }
-                                    >
-                                        Voir disponibilités
-                                    </Button>
+    variant="secondary"
+    onClick={() =>
+        navigate(`/${user.role}/salles/${room.id}`)
+    }
+>
+    Voir disponibilités
+</Button>
                                     
                                     <Button
                                         disabled={room.statut !== "disponible"}
                                         onClick={() =>
-                                            navigate(`/${user.role}${room.id}?focus=reservation`)
+                                            navigate(`/${user.role}/salles/${room.id}?focus=reservation`)
                                         }
                                     >
                                         {

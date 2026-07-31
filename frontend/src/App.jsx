@@ -20,7 +20,13 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import DisponibiliteSalle from "./pages/enseignant/DisponibiliteSalle";
 import MesReservations from "./pages/enseignant/MesReservations";
 import Profil from "./pages/profil/Profil";
+import DashboardLogistique from "./pages/logistique/DashboardLogistique";
 import DashboardEtudiant from "./pages/etudiant/DashboardEtudiant";
+import GestionDemandes from "./pages/logistique/GestionDemandes";
+import DashboardAdmin from "./pages/admin/DashboardAdmin";
+import GestionSalles from "./pages/admin/GestionSalles";
+import GestionUtilisateurs from "./pages/admin/GestionUtilisateurs";
+import Statistiques from "./pages/admin/Statistiques";
 export default function App() {
     return (
         <BrowserRouter>
@@ -74,7 +80,7 @@ export default function App() {
     path="/profil"
     element={
         <ProtectedRoute
-            roles={["enseignant","logistique","administrateur"]}
+            roles={["etudiant","enseignant","logistique","administrateur"]}
         >
             <Profil />
         </ProtectedRoute>
@@ -117,6 +123,61 @@ export default function App() {
     }
 />
 
+<Route
+    path="/logistique/dashboard"
+    element={
+        <ProtectedRoute roles={["logistique"]}>
+            <DashboardLogistique />
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/logistique/demandes"
+    element={
+        <ProtectedRoute roles={["logistique"]}>
+            <GestionDemandes />
+        </ProtectedRoute>
+    }
+/>
+
+{/* ================= ADMINISTRATEUR ================= */}
+
+<Route
+    path="/admin/dashboard"
+    element={
+        <ProtectedRoute roles={["administrateur"]}>
+            <DashboardAdmin/>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/salles"
+    element={
+        <ProtectedRoute roles={["administrateur"]}>
+            <GestionSalles/>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/utilisateurs"
+    element={
+        <ProtectedRoute roles={["administrateur"]}>
+            <GestionUtilisateurs/>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/statistiques"
+    element={
+        <ProtectedRoute roles={["administrateur"]}>
+            <Statistiques/>
+        </ProtectedRoute>
+    }
+/>
             </Routes>
         </BrowserRouter>
     );

@@ -5,8 +5,12 @@ use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\SalleController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\EquipementController;
+use App\Http\Controllers\Api\EnseignantDashboardController;
+use App\Http\Controllers\Api\EtudiantDashboardController;
+use App\Http\Controllers\Api\LogistiqueDashboardController;
+use App\Http\Controllers\Api\AdminDashboardController;
+use App\Http\Controllers\Api\AdminStatistiquesController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -14,7 +18,17 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::middleware('role:enseignant')
+        ->get('/enseignant/dashboard',[EnseignantDashboardController::class,'index']);
+
+    Route::middleware('role:etudiant')
+        ->get('/etudiant/dashboard',[EtudiantDashboardController::class,'index']);
+
+    Route::middleware('role:logistique')
+        ->get('/logistique/dashboard',[LogistiqueDashboardController::class,'index']);
+
+    Route::middleware('role:administrateur')
+        ->get('/admin/dashboard',[AdminDashboardController::class,'index']);
 
     Route::get('/salles', [SalleController::class, 'index']);
     Route::get('/salles/{salle}', [SalleController::class, 'show']);
@@ -32,9 +46,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/salles/{salle}', [SalleController::class, 'update']);
         Route::delete('/salles/{salle}', [SalleController::class, 'destroy']);
 
-        // Gestion des utilisateurs : reservee a l'administrateur uniquement
+        // Gestion des utilisateurs
         Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+        Route::get('/admin/statistiques', [AdminStatistiquesController::class, 'index']);
     });
 
     Route::middleware('role:logistique,administrateur')->group(function () {

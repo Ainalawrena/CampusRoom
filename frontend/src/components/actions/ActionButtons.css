@@ -1,0 +1,32 @@
+.actions{
+    display:flex;
+    gap:14px;
+    align-items:center;
+}
+
+.action-btn{
+    border:none;
+    background:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:15px;
+    font-weight:600;
+}
+
+.edit-btn{
+    color:#52796F;
+}
+
+.edit-btn:hover{
+    color:#354F52;
+}
+
+.delete-btn{
+    color:#d9534f;
+}
+
+.delete-btn:hover{
+    color:#b52b27;
+}

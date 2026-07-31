@@ -1,9 +1,13 @@
 import api from "./axios";
 
-export const dashboardApi = {
+export const dashboardApi={
 
-    index() {
-        return api.get("/dashboard");
-    }
+    enseignant:()=>api.get("/enseignant/dashboard"),
+
+    etudiant:()=>api.get("/etudiant/dashboard"),
+
+    logistique:()=>api.get("/logistique/dashboard"),
+
+    admin:()=>api.get("/admin/dashboard")
 
 };

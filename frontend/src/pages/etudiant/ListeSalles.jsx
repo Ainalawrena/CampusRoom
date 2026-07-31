@@ -189,16 +189,16 @@ export default function ListeSalles() {
                                     <Button
                                         variant="secondary"
                                         onClick={() =>
-                                            navigate(`/enseignant/salles/${room.id}`)
+                                            navigate(`/${user.role}/salles/${room.id}`)
                                         }
-                                    >
-                                        Voir disponibilités
-                                    </Button>
+                                >
+                                    Voir disponibilités
+                                </Button>
                                     
                                     <Button
                                         disabled={room.statut !== "disponible"}
                                         onClick={() =>
-                                            navigate(`/${user.role}${room.id}?focus=reservation`)
+                                            navigate(`/${user.role}/salles/${room.id}?focus=reservation`)
                                         }
                                     >
                                         {

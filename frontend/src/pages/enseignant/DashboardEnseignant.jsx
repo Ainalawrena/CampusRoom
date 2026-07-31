@@ -45,7 +45,7 @@ export default function DashboardEnseignant() {
 
             try {
 
-                const response = await dashboardApi.index();
+                const response=await dashboardApi.enseignant();
 
                 setDashboard(response.data);
 

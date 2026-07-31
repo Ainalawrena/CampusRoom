@@ -1,0 +1,331 @@
+Phase 1 — Prototype HTML/CSS (terminée)
+
+Un prototype statique fidèle à un PDF de wireframes + une palette imposée (Ash Grey 
+#CAD2C5, Muted Teal 
+#84A98C, Deep Teal 
+#52796F, Dark Slate 
+#354F52, Charcoal Blue 
+#2F3E46). Pas de framework CSS, JS minimal. Un fichier HTML + un CSS par écran, tous reliés entre eux. Écrans couverts : connexion/inscription, puis les 4 parcours par rôle (Étudiant, Enseignant, Logistique, Administrateur) avec leurs listes, détails, tableaux de bord et formulaires respectifs. Ce prototype sert maintenant de référence visuelle et fonctionnelle pour la vraie application.
+
+Phase 2 — Vraie stack : React + Laravel (en cours)
+
+Organisation : un seul repo Git (monorepo) — https://github.com/Ainalawrena/CampusRoom — avec deux dossiers indépendants backend/ (Laravel) et frontend/ (React), chacun avec ses propres dépendances (composer.json / package.json).
+
+Choix techniques (pris pour aller vite, contrainte de 2 jours) :
+
+Auth : Laravel Sanctum (auth SPA standard, tokens, pas d'OAuth lourd)
+État côté React : Context API + hooks natifs (pas de Redux/Zustand)
+Style : les mêmes fichiers CSS/tokens que le prototype, pas de passage à Tailwind
+Arborescence backend (Laravel)
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/Api/
+│   │   │   ├── AuthController.php        (register, login, logout, me)
+│   │   │   ├── RoomController.php        (CRUD salles)
+│   │   │   ├── ReservationController.php (index, store, updateStatut)
+│   │   │   └── UserController.php        (index, destroy — admin)
+│   │   └── Middleware/CheckRole.php      (protège les routes par rôle)
+│   └── Models/
+│       ├── User.php        (champ role, relation reservations)
+│       ├── Room.php        (nom, capacite, equipements[json], batiment, statut)
+│       └── Reservation.php (user_id, room_id, date, heures, motif, statut)
+├── database/
+│   ├── migrations/ (users, rooms, reservations)
+│   └── seeders/DatabaseSeeder.php (reprend exactement les données du wireframe : Aina, Andrew, Rakoto, Rabe + les 4 salles + 3 réservations)
+├── routes/api.php  (routes publiques login/register, routes protégées par rôle via middleware role:...)
+├── config/cors.php + config/sanctum.php (configurés pour parler avec le front React)
+└── composer.json, .env.example, artisan, bootstrap/app.php
+
+Logique métier clé : dans routes/api.php, les routes sont groupées par niveau d'accès — public (login/register), authentifié (salles en lecture, réservations), puis role:logistique,administrateur (valider/refuser une réservation), puis role:administrateur (CRUD salles, gestion utilisateurs). Dans ReservationController::store, une réservation faite par un enseignant est directement confirmee, alors qu'un étudiant passe par en_attente — ça reproduit la différence "Validation requise" vue dans le wireframe.
+
+Arborescence frontend (React + Vite)
+frontend/
+├── src/
+│   ├── api/            (axios.js + auth.js, rooms.js, reservations.js — un module par ressource)
+│   ├── context/AuthContext.jsx  (utilisateur courant, login/logout, token en localStorage)
+│   ├── hooks/useAuth.js
+│   ├── routes/
+│   │   ├── AppRouter.jsx     (toutes les routes, une par écran du wireframe)
+│   │   └── ProtectedRoute.jsx (redirige si pas connecté ou mauvais rôle)
+│   ├── layouts/DashboardLayout.jsx (sidebar + topbar communs, remplace la duplication du prototype HTML)
+│   ├── components/layout/
+│   │   ├── Sidebar.jsx + navLinks.js (liens de navigation générés dynamiquement selon le rôle)
+│   │   └── Topbar.jsx
+│   ├── components/ui/Badge.jsx (composant réutilisable pour les statuts)
+│   ├── pages/
+│   │   ├── auth/LoginPage.jsx        ✅ fonctionnelle, branchée sur l'API
+│   │   ├── rooms/RoomListPage.jsx    ✅ fonctionnelle, branchée sur l'API
+│   │   ├── rooms/RoomDetailPage.jsx       ⏳ à écrire
+│   │   ├── reservations/MyReservationsPage.jsx ⏳ à écrire
+│   │   ├── NotificationsPage.jsx          ⏳ à écrire
+│   │   ├── logistics/ (Dashboard, ManageRequests)  ⏳ à écrire
+│   │   └── admin/ (Dashboard, Rooms, RoomForm, Stats, Users) ⏳ à écrire
+│   └── assets/styles/tokens.css (palette identique au prototype)
+└── package.json, vite.config.js, index.html
+
+Différence importante avec le prototype : dans le HTML statique, chaque rôle avait ses propres fichiers dupliqués (salle-reservation-etudiant.html vs -enseignant.html, etc.). En React, une seule RoomListPage.jsx sert aux deux rôles — la sidebar et les droits changent dynamiquement selon user.role, pas de duplication de code. Autre différence : la page de connexion n'a plus de sélecteur de rôle factice — le rôle vient du compte utilisateur renvoyé par l'API après login, ce qui est plus correct.
+
+Fonctionnement d'ensemble
+React (port 5173 par défaut) appelle l'API Laravel (port 8000) via Axios, avec un token Sanctum stocké en localStorage et injecté automatiquement sur chaque requête
+AuthContext garde l'utilisateur connecté en mémoire, ProtectedRoute bloque l'accès aux pages selon le rôle
+Laravel expose tout sous /api/*, avec CORS configuré pour n'accepter que l'origine du front (FRONTEND_URL dans .env)
+Le DatabaseSeeder permet de retrouver immédiatement les mêmes comptes/données que dans le wireframe pour tester chaque rôle
+
+
+src/
+│
+├── api/
+│
+├── assets/
+│
+├── components/
+│
+├── context/
+│
+├── hooks/
+│
+├── layouts/
+│      EnseignantLayout.jsx
+│
+├── pages/
+│      ├── auth/
+│      │      LoginPage.jsx
+│      │      login.css
+│      │
+│      ├── enseignant/
+│      │      DashboardEnseignant.jsx
+│      │      MesReservations.jsx
+│      │      NouvelleReservation.jsx
+│      │
+│      ├── etudiant/
+│      │
+│      ├── logistique/
+│      │
+│      └── admin/
+│
+├── App.jsx
+└── main.jsx
+
+
+3. layouts/
+EnseignantLayout.jsx
+
+C'est LE squelette de toutes les pages enseignant.
+
+// =====================================================
+// Layout principal de l'espace Enseignant
+//
+// Contient uniquement :
+//
+// - Sidebar
+// - Header
+// - Zone centrale
+//
+// Toutes les pages Enseignant seront affichées
+// dans cette zone.
+//
+// Dashboard
+// Mes réservations
+// Nouvelle réservation
+// Profil
+//
+// Rien de spécifique à une page ici.
+// =====================================================
+4. components/
+
+Ce sont des morceaux réutilisables.
+
+Sidebar.jsx
+// =====================================================
+//
+// Menu de navigation.
+//
+// Contient :
+//
+// - Logo CampusRoom
+// - Tableau de bord
+// - Mes réservations
+// - Nouvelle réservation
+// - Profil
+// - Déconnexion
+//
+// Aucun contenu métier.
+//
+// Seulement la navigation.
+//
+// =====================================================
+Header.jsx
+// =====================================================
+//
+// Barre supérieure.
+//
+// Contient :
+//
+// - Nom utilisateur
+// - Photo
+// - Notifications
+// - Heure
+//
+// Rien concernant les réservations.
+//
+// =====================================================
+Card.jsx
+// =====================================================
+//
+// Carte réutilisable.
+//
+// Exemples :
+//
+// Nombre de réservations
+//
+// Réservations validées
+//
+// Réservations refusées
+//
+// Salle favorite
+//
+// Cette carte sera utilisée partout.
+//
+// =====================================================
+Table.jsx
+// =====================================================
+//
+// Tableau générique.
+//
+// Colonnes
+//
+// Lignes
+//
+// Pagination
+//
+// Boutons Actions
+//
+// Utilisé pour :
+//
+// Mes réservations
+//
+// Utilisateurs
+//
+// Salles
+//
+// etc.
+//
+// =====================================================
+5. pages/
+
+Ici on met les vraies pages.
+
+DashboardEnseignant.jsx
+// =====================================================
+//
+// Tableau de bord principal.
+//
+// Affiche :
+//
+// Cartes statistiques
+//
+// Dernières réservations
+//
+// Notifications
+//
+// Accès rapide
+//
+// Cette page utilise EnseignantLayout.
+//
+// =====================================================
+MesReservations.jsx
+// =====================================================
+//
+// Liste complète des réservations.
+//
+// Contient :
+//
+// Tableau
+//
+// Recherche
+//
+// Filtres
+//
+// Pagination
+//
+// Bouton Annuler
+//
+// =====================================================
+NouvelleReservation.jsx
+// =====================================================
+//
+// Formulaire.
+//
+// Choisir salle
+//
+// Date
+//
+// Heure
+//
+// Motif
+//
+// Envoyer la demande
+//
+// =====================================================
+Profil.jsx
+// =====================================================
+//
+// Informations personnelles.
+//
+// Nom
+//
+// Email
+//
+// Département
+//
+// Mot de passe
+//
+// Photo
+//
+// =====================================================
+6. api/
+
+Tous les appels Laravel.
+
+reservation.js
+// =====================================================
+//
+// Toutes les requêtes concernant
+// les réservations.
+//
+// GET
+//
+// POST
+//
+// PUT
+//
+// DELETE
+//
+// Rien concernant React.
+//
+// Seulement Axios.
+//
+// =====================================================
+salle.js
+// =====================================================
+//
+// Toutes les requêtes concernant
+// les salles.
+//
+// Liste
+//
+// Disponibilités
+//
+// Détails
+//
+// =====================================================
+7. hooks/
+useAuth.js
+
+Tu l'as déjà.
+
+Il sert uniquement à récupérer facilement le contexte.
+
+8. context/
+AuthContext.jsx

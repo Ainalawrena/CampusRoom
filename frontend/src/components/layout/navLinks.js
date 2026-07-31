@@ -68,11 +68,6 @@ export const navLinks = {
             icon: FaClipboardList,
         },
         {
-            label: "Salles",
-            path: "/logistique/salles",
-            icon: FaDoorOpen,
-        },
-        {
             label: "Profil",
             path: "/profil",
             icon: FaUser,

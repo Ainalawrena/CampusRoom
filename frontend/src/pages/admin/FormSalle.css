@@ -1,0 +1,163 @@
+.salle-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.salle-modal-content{
+    width:650px;
+    max-width:95%;
+    max-height:85vh;
+    background:#fff;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 20px 45px rgba(0,0,0,.2);
+    overflow:hidden;
+}
+
+.salle-modal-content h2{
+    margin:0;
+    padding:25px 30px;
+    color:#2F3E46;
+    font-size:28px;
+    border-bottom:1px solid #ececec;
+    background:#fff;
+    flex-shrink:0;
+}
+
+.salle-modal-content form{
+    flex:1;
+    overflow-y:auto;
+    padding:25px 30px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.salle-modal-content label{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    font-size:15px;
+    font-weight:600;
+    color:#2F3E46;
+}
+
+.salle-modal-content input,
+.salle-modal-content select{
+    width:100%;
+    padding:13px 15px;
+    border:1px solid #d8d8d8;
+    border-radius:10px;
+    outline:none;
+    font-size:15px;
+    transition:.2s;
+    box-sizing:border-box;
+    background:white;
+}
+
+.salle-modal-content input:focus,
+.salle-modal-content select:focus{
+    border-color:#52796F;
+    box-shadow:0 0 0 3px rgba(82,121,111,.15);
+}
+
+.salle-equipements-list{
+    grid-column:1/3;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    border:1px solid #d8d8d8;
+    border-radius:12px;
+    padding:18px;
+    max-height:180px;
+    overflow-y:auto;
+}
+
+.salle-equipements-list label{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:8px;
+    font-weight:500;
+    cursor:pointer;
+}
+
+.salle-equipements-list input{
+    width:auto;
+}
+
+.salle-form-actions{
+    grid-column:1/3;
+    position:sticky;
+    bottom:0;
+    background:#fff;
+    border-top:1px solid #ececec;
+    padding-top:20px;
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+}
+
+.salle-cancel,
+.salle-save{
+    min-width:150px;
+    border:none;
+    border-radius:10px;
+    padding:13px 25px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.salle-cancel{
+    background:#eef2f1;
+    color:#2F3E46;
+}
+
+.salle-cancel:hover{
+    background:#dfe7e4;
+}
+
+.salle-save{
+    background:#52796F;
+    color:white;
+}
+
+.salle-save:hover{
+    background:#3f665d;
+}
+
+@media(max-width:700px){
+
+    .salle-modal-content{
+        width:95%;
+        max-height:92vh;
+    }
+
+    .salle-modal-content form{
+        grid-template-columns:1fr;
+    }
+
+    .salle-equipements-list{
+        grid-column:1;
+        grid-template-columns:1fr;
+    }
+
+    .salle-form-actions{
+        grid-column:1;
+        flex-direction:column-reverse;
+    }
+
+    .salle-cancel,
+    .salle-save{
+        width:100%;
+    }
+
+}

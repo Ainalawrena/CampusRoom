@@ -66,60 +66,61 @@ class SalleController extends Controller
      * reserve a l'administrateur — verifie au niveau des routes).
      */
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
-            'capacite' => ['required', 'integer', 'min:1'],
-            'batiment' => ['nullable', 'string', 'max:255'],
-            'statut' => ['nullable', 'in:disponible,maintenance'],
-            // equipement_ids : tableau d'ids, ex: [1, 2, 3]
-            // 'exists:equipements,id' verifie que CHAQUE id envoye
-            // correspond bien a un equipement qui existe reellement
-            'equipement_ids' => ['nullable', 'array'],
-            'equipement_ids.*' => ['exists:equipements,id'],
-        ]);
+{
+    $data = $request->validate([
+        'nom' => ['required','string','max:255'],
+        'capacite' => ['required','integer','min:1'],
+        'batiment' => ['nullable','string','max:255'],
+        'statut' => ['required','in:disponible,maintenance,occupee'],
+        'equipements' => ['nullable','array'],
+        'equipements.*' => ['exists:equipements,id'],
+    ]);
 
-        $salle = Salle::create($data);
+    $salle = Salle::create([
+        'nom' => $data['nom'],
+        'capacite' => $data['capacite'],
+        'batiment' => $data['batiment'] ?? null,
+        'statut' => $data['statut'],
+    ]);
 
-        // sync() remplit la table pivot equipement_salle avec les ids
-        // envoyes. On l'appelle a part car "equipement_ids" n'est pas
-        // une colonne de la table "salles" — Salle::create() l'ignorerait
-        if (! empty($data['equipement_ids'])) {
-            $salle->equipements()->sync($data['equipement_ids']);
-        }
+    $salle->equipements()->sync($data['equipements'] ?? []);
 
-        return response()->json($salle->load('equipements'), 201);
-    }
+    return response()->json(
+        $salle->load('equipements'),
+        201
+    );
+}
 
     /**
      * PUT /api/salles/{salle}
      * Modifie une salle existante (bouton "Modifier" du wireframe admin).
      */
-    public function update(Request $request, Salle $salle)
-    {
-        // 'sometimes' : le champ n'est valide QUE s'il est present dans
-        // la requete. Utile pour une modification partielle — pas obligatoire
-        // de renvoyer tous les champs a chaque fois
-        $data = $request->validate([
-            'nom' => ['sometimes', 'string', 'max:255'],
-            'capacite' => ['sometimes', 'integer', 'min:1'],
-            'batiment' => ['nullable', 'string', 'max:255'],
-            'statut' => ['nullable', 'in:disponible,maintenance'],
-            'equipement_ids' => ['nullable', 'array'],
-            'equipement_ids.*' => ['exists:equipements,id'],
-        ]);
+  public function update(Request $request, Salle $salle)
+{
+    $data = $request->validate([
+        'nom' => ['sometimes','string','max:255'],
+        'capacite' => ['sometimes','integer','min:1'],
+        'batiment' => ['nullable','string','max:255'],
+        'statut' => ['sometimes','in:disponible,maintenance,occupee'],
+        'equipements' => ['nullable','array'],
+        'equipements.*' => ['exists:equipements,id'],
+    ]);
 
-        $salle->update($data);
+    $salle->update([
+        'nom' => $data['nom'] ?? $salle->nom,
+        'capacite' => $data['capacite'] ?? $salle->capacite,
+        'batiment' => $data['batiment'] ?? $salle->batiment,
+        'statut' => $data['statut'] ?? $salle->statut,
+    ]);
 
-        // sync() ici remplace ENTIEREMENT la liste des equipements
-        // par la nouvelle liste envoyee (ajoute les nouveaux, retire
-        // ceux qui ne sont plus dans le tableau)
-        if (array_key_exists('equipement_ids', $data)) {
-            $salle->equipements()->sync($data['equipement_ids'] ?? []);
-        }
-
-        return response()->json($salle->load('equipements'));
+    if(array_key_exists('equipements',$data)){
+        $salle->equipements()->sync($data['equipements']);
     }
+
+    return response()->json(
+        $salle->load('equipements')
+    );
+}
 
     /**
      * DELETE /api/salles/{salle}
