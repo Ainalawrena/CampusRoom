@@ -1,66 +1,76 @@
-// =====================================================
-//
-// Liste complète des réservations.
-//
-// Contient :
-//
-// Tableau
-//
-// Recherche
-//
-// Filtres
-//
-// Pagination
-//
-// Bouton Annuler
-//
-// =====================================================
-import { useEffect, useState } from "react";
+import { useEffect,useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import Table from "../../components/ui/Table";
 import Badge from "../../components/ui/Badge";
 import { getMyReservations } from "../../api/reservation";
 import "./MesReservations.css";
 
-export default function MesReservations() {
+export default function MesReservations(){
 
-    const [reservations,setReservations]=useState([]);
-    const [loading,setLoading]=useState(true);
+    const[reservations,setReservations]=useState([]);
+    const[loading,setLoading]=useState(true);
 
     useEffect(()=>{
         loadReservations();
     },[]);
 
     async function loadReservations(){
+
         try{
-            const response=await getMyReservations();
-            setReservations(response.data);
+
+            const{data}=await getMyReservations();
+
+            setReservations(
+
+                data.map(r=>({
+
+                    id:r.id,
+
+                    salle:r.salle.nom,
+
+                    date:new Date(r.date).toLocaleDateString("fr-FR"),
+
+                    heure:`${r.heure_debut.slice(0,5)} - ${r.heure_fin.slice(0,5)}`,
+
+                    statut:(
+                        <Badge type={r.statut}>
+                            {{
+                                acceptee:"Acceptée",
+                                en_attente:"En attente",
+                                refusee:"Refusée"
+                            }[r.statut]}
+                        </Badge>
+                    )
+
+                }))
+
+            );
+
         }catch(error){
+
             console.error(error);
+
         }finally{
+
             setLoading(false);
+
         }
+
     }
 
     const total=reservations.length;
 
     const acceptees=reservations.filter(
-        r=>r.statut==="acceptee"
+        r=>r.statut.props.type==="acceptee"
     ).length;
 
     const attente=reservations.filter(
-        r=>r.statut==="en_attente"
+        r=>r.statut.props.type==="en_attente"
     ).length;
 
     const refusees=reservations.filter(
-        r=>r.statut==="refusee"
+        r=>r.statut.props.type==="refusee"
     ).length;
-
-    const labels={
-        acceptee:"Acceptée",
-        en_attente:"En attente",
-        refusee:"Refusée"
-    };
 
     const columns=[
         {key:"salle",label:"Salle"},
@@ -70,6 +80,7 @@ export default function MesReservations() {
     ];
 
     return(
+
         <DashboardLayout>
 
             <div className="reservations-page">
@@ -115,30 +126,6 @@ export default function MesReservations() {
                         <Table
                             columns={columns}
                             data={reservations}
-
-                            renderCell={(row,col)=>{
-
-                                if(col.key==="salle")
-                                    return row.salle.nom;
-
-                                if(col.key==="date")
-                                    return new Date(row.date)
-                                        .toLocaleDateString("fr-FR");
-
-                                if(col.key==="heure")
-                                    return `${row.heure_debut.slice(0,5)} - ${row.heure_fin.slice(0,5)}`;
-
-                                if(col.key==="statut")
-                                    return(
-                                        <Badge type={row.statut}>
-                                            {labels[row.statut]}
-                                        </Badge>
-                                    );
-
-                                return row[col.key];
-
-                            }}
-
                         />
 
                     )}
@@ -148,6 +135,7 @@ export default function MesReservations() {
             </div>
 
         </DashboardLayout>
+
     );
 
 }

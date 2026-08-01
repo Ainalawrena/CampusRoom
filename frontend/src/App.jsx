@@ -18,7 +18,7 @@ import DashboardEnseignant from "./pages/enseignant/DashboardEnseignant";
 import ListeSalles from "./pages/enseignant/ListeSalles";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DisponibiliteSalle from "./pages/enseignant/DisponibiliteSalle";
-import MesReservations from "./pages/enseignant/MesReservations";
+import MesReservations from "./pages/common/MesReservations";
 import Profil from "./pages/profil/Profil";
 import DashboardLogistique from "./pages/logistique/DashboardLogistique";
 import DashboardEtudiant from "./pages/etudiant/DashboardEtudiant";

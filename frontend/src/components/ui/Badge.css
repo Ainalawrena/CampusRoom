@@ -1,27 +1,61 @@
 .badge{
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
 
-    padding:6px 14px;
+    padding:6px 14px !important;
 
     border-radius:20px;
 
-    font-size:.85rem;
+    font-size:14px !important;
 
     font-weight:600;
 
+    color:#000 !important;
+
+    background:#ddd !important;
+
+    opacity:1 !important;
+
+    visibility:visible !important;
+
+    line-height:1.2;
+}
+
+.badge.acceptee{
+    background:#dff5ea !important;
+    color:#2e7d5b !important;
+}
+
+.badge.en_attente{
+    background:#fff4d6 !important;
+    color:#b7791f !important;
+}
+
+.badge.refusee{
+    background:#fde2e2 !important;
+    color:#c53030 !important;
 }
 
 .badge.disponible{
-
-    background:#dff5ea;
-
-    color:#2e7d5b;
-
+    background:#dff5ea !important;
+    color:#2e7d5b !important;
 }
 
 .badge.occupee{
+    background:#ececec !important;
+    color:#555 !important;
+}
 
-    background:#ececec;
+.badge.maintenance{
+    background:#fff4d6 !important;
+    color:#b7791f !important;
+}
 
-    color:#555;
-
+.badge{
+    position:relative !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    bottom:auto !important;
 }

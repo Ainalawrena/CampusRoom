@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\EtudiantDashboardController;
 use App\Http\Controllers\Api\LogistiqueDashboardController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminStatistiquesController;
+use App\Http\Controllers\Api\NotificationController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -39,8 +40,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mes-reservations', [ReservationController::class, 'mesReservations']);
 
     Route::get('/equipements', [EquipementController::class, 'index']);
- 
 
+    Route::get(
+        '/notifications',
+        [NotificationController::class,'index']
+    );
+
+    Route::patch(
+        '/notifications/read-all',
+        [NotificationController::class,'readAll']
+    );
+
+    Route::patch(
+        '/notifications/{notification}/read',
+        [NotificationController::class,'read']
+    );
+
+    Route::delete(
+        '/notifications/{notification}',
+        [NotificationController::class,'destroy']
+    );
     Route::middleware('role:administrateur')->group(function () {
         Route::post('/salles', [SalleController::class, 'store']);
         Route::put('/salles/{salle}', [SalleController::class, 'update']);

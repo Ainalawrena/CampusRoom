@@ -127,13 +127,13 @@ export default function MesReservations() {
 
                                 if(col.key==="heure")
                                     return `${row.heure_debut.slice(0,5)} - ${row.heure_fin.slice(0,5)}`;
-if(col.key==="statut"){
-    return(
-        <Badge type={row.statut}>
-            TEST
-        </Badge>
-    );
-}
+                                if(col.key==="statut"){
+                                    return(
+                                        <Badge type={row.statut}>
+                                            {labels[row.statut]}
+                                        </Badge>
+                                    );
+                                }
 
                                 return row[col.key];
 

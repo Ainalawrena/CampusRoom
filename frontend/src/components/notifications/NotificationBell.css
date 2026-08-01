@@ -1,0 +1,94 @@
+.notification{
+    position:relative;
+}
+
+.notification-btn{
+    position:relative;
+    border:none;
+    background:none;
+    cursor:pointer;
+    color:#2F3E46;
+}
+
+.badge{
+    position:absolute;
+    top:-5px;
+    right:-5px;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#E63946;
+    color:#fff;
+    font-size:11px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.notification-menu{
+    position:absolute;
+    top:45px;
+    right:0;
+    width:360px;
+    max-height:450px;
+    overflow-y:auto;
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 12px 35px rgba(0,0,0,.15);
+    z-index:1000;
+}
+
+.notification-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 18px;
+    border-bottom:1px solid #eee;
+}
+
+.notification-header button{
+    border:none;
+    background:none;
+    cursor:pointer;
+}
+
+.notification-item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:15px;
+    border-bottom:1px solid #f2f2f2;
+}
+
+.notification-item.unread{
+    background:#F4F8F7;
+}
+
+.notification-body{
+    flex:1;
+    cursor:pointer;
+}
+
+.notification-body strong{
+    display:block;
+    color:#2F3E46;
+}
+
+.notification-body p{
+    margin:5px 0 0;
+    color:#666;
+    font-size:14px;
+}
+
+.notification-item button{
+    border:none;
+    background:none;
+    cursor:pointer;
+    color:#777;
+}
+
+.empty{
+    padding:25px;
+    text-align:center;
+    color:#888;
+}
