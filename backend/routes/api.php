@@ -12,10 +12,63 @@ use App\Http\Controllers\Api\LogistiqueDashboardController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminStatistiquesController;
 use App\Http\Controllers\Api\NotificationController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationCreeeMail;
+use App\Models\Reservation;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+/*
+|--------------------------------------------------------------------------
+| Route temporaire de test des e-mails
+|--------------------------------------------------------------------------
+|
+| Cette route permet de vérifier que Laravel peut envoyer
+| correctement un e-mail via Gmail.
+|
+| Une fois les tests terminés,
+| cette route devra être supprimée.
+|
+*/
 
+Route::get("/test-mail",function(){
+
+    // On récupère une réservation existante.
+    // Elle servira à remplir automatiquement
+    // les informations dans l'e-mail.
+    $reservation=Reservation::with([
+        "user",
+        "salle"
+    ])->first();
+
+    // Si aucune réservation n'existe,
+    // on renvoie un message d'erreur.
+    if(!$reservation){
+
+        return response()->json([
+            "message"=>"Aucune réservation trouvée."
+        ],404);
+
+    }
+
+    // Envoie un e-mail au propriétaire
+    // de cette réservation.
+    Mail::to(
+        $reservation->user->email
+    )->send(
+
+        new ReservationCreeeMail($reservation)
+
+    );
+
+    // Réponse si tout s'est bien passé.
+    return response()->json([
+
+        "message"=>"E-mail envoyé avec succès."
+
+    ]);
+
+});
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
@@ -77,4 +130,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:logistique,administrateur')->group(function () {
         Route::patch('/reservations/{reservation}/statut', [ReservationController::class, 'updateStatut']);
     });
+
+    
 });

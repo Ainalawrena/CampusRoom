@@ -7,6 +7,10 @@ use App\Models\Reservation;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationCreeeMail;
+use App\Mail\ReservationAccepteeMail;
+use App\Mail\ReservationRefuseeMail;
 
 class ReservationController extends Controller
 {
@@ -142,6 +146,25 @@ class ReservationController extends Controller
 
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Envoi d'un e-mail de confirmation
+        |--------------------------------------------------------------------------
+        |
+        | L'étudiant ou l'enseignant reçoit un e-mail indiquant
+        | que sa demande a bien été enregistrée.
+        |
+        */
+
+        Mail::to($reservation->user->email)
+            ->send(
+                new ReservationCreeeMail(
+                    $reservation->load([
+                        'user',
+                        'salle'
+                    ])
+                )
+            );
         return response()->json(
             $reservation->load(['user','salle']),
             201
@@ -183,6 +206,36 @@ class ReservationController extends Controller
             'lien'=>'/reservations'
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Envoi d'un e-mail suivant le nouveau statut
+        |--------------------------------------------------------------------------
+        |
+        | L'utilisateur reçoit automatiquement un e-mail
+        | lorsqu'un logisticien accepte ou refuse sa demande.
+        |
+        */
+            
+        $reservation->load([
+            'user',
+            'salle'
+        ]);
+        
+        if($reservation->statut==='acceptee'){
+        
+            Mail::to($reservation->user->email)
+                ->send(
+                    new ReservationAccepteeMail($reservation)
+                );
+            
+        }else{
+        
+            Mail::to($reservation->user->email)
+                ->send(
+                    new ReservationRefuseeMail($reservation)
+                );
+            
+        }
         return response()->json($reservation->load(['user','salle']));
     }
 
